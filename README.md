@@ -1,73 +1,162 @@
-# React + TypeScript + Vite
+# Ma Liste de Courses
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Application mobile de liste de courses, construite avec React + TypeScript + Vite et packagée pour Android via Capacitor.
 
-Currently, two official plugins are available:
+## Prérequis
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- [Node.js](https://nodejs.org/) >= 18
+- [Java JDK](https://adoptium.net/) >= 17 (pour le build Android)
+- [Android Studio](https://developer.android.com/studio) (SDK Android installé)
 
-## React Compiler
+Assurez-vous que les variables d'environnement suivantes sont configurées :
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+export ANDROID_HOME=$HOME/Android/Sdk
+export PATH=$PATH:$ANDROID_HOME/platform-tools
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Installation
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
 ```
+
+---
+
+## Développement web
+
+```bash
+npm run dev
+```
+
+Lance l'application sur `http://localhost:5173`.
+
+---
+
+## Build Android (APK)
+
+### 1. Compiler l'app web et synchroniser avec Android
+
+```bash
+npm run build:android
+```
+
+Cette commande :
+1. Compile le projet React/TS (`tsc -b && vite build`)
+2. Copie le `dist/` dans le projet Android via `cap sync android`
+
+### 2a. Builder l'APK via Android Studio (recommandé)
+
+```bash
+npm run open:android
+```
+
+Dans Android Studio :
+- **Build → Build Bundle(s) / APK(s) → Build APK(s)**
+
+L'APK de debug se trouve dans :
+```
+android/app/build/outputs/apk/debug/app-debug.apk
+```
+
+### 2b. Builder l'APK en ligne de commande
+
+```bash
+cd android
+./gradlew assembleDebug
+```
+
+L'APK se trouve dans :
+```
+android/app/build/outputs/apk/debug/app-debug.apk
+```
+
+---
+
+## Build APK de release (signé)
+
+### 1. Créer une clé de signature (une seule fois)
+
+```bash
+keytool -genkey -v \
+  -keystore ma-liste.jks \
+  -alias ma-liste-key \
+  -keyalg RSA \
+  -keysize 2048 \
+  -validity 10000
+```
+
+> ⚠️ **Conservez précieusement le fichier `ma-liste.jks`** — sans lui, vous ne pourrez plus mettre à jour l'app. Ne le commitez jamais dans git.
+
+Ajoutez `ma-liste.jks` dans le `.gitignore` :
+```
+ma-liste.jks
+```
+
+### 2. Configurer les variables de signature
+
+Créez le fichier `android/key.properties` :
+
+```properties
+storePassword=VOTRE_MOT_DE_PASSE
+keyPassword=VOTRE_MOT_DE_PASSE_CLE
+keyAlias=ma-liste-key
+storeFile=../../ma-liste.jks
+```
+
+> ⚠️ Ce fichier ne doit jamais être commité — ajoutez `android/key.properties` dans `.gitignore`.
+
+### 3. Configurer Gradle pour utiliser la clé
+
+Dans `android/app/build.gradle`, ajoutez avant `android {}` :
+
+```groovy
+def keyPropertiesFile = rootProject.file("key.properties")
+def keyProperties = new Properties()
+keyProperties.load(new FileInputStream(keyPropertiesFile))
+```
+
+Et dans le bloc `android {}` :
+
+```groovy
+signingConfigs {
+    release {
+        keyAlias keyProperties['keyAlias']
+        keyPassword keyProperties['keyPassword']
+        storeFile file(keyProperties['storeFile'])
+        storePassword keyProperties['storePassword']
+    }
+}
+buildTypes {
+    release {
+        signingConfig signingConfigs.release
+        minifyEnabled false
+        proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    }
+}
+```
+
+### 4. Builder l'APK release
+
+```bash
+npm run build:android
+cd android
+./gradlew assembleRelease
+```
+
+L'APK signé se trouve dans :
+```
+android/app/build/outputs/apk/release/app-release.apk
+```
+
+---
+
+## Infos de l'app
+
+| Champ | Valeur |
+|---|---|
+| App ID | `com.monapp.listecourses` |
+| App Name | `Ma Liste de Courses` |
+| Build type | APK |
