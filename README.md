@@ -153,6 +153,29 @@ android/app/build/outputs/apk/release/app-release.apk
 
 ---
 
+## Fonctionnalités
+
+### Catalogue de produits
+
+Le catalogue regroupe tous les produits disponibles, filtrables par catégorie ou par recherche textuelle.
+
+### Produits personnalisés
+
+Il est possible d'ajouter ses propres produits au catalogue :
+
+- Cliquer sur **`+`** dans la barre de recherche du catalogue
+- Ou effectuer une recherche infructueuse et cliquer sur **« Créer "{terme}" »** pour pré-remplir le nom
+
+Le formulaire de création permet de choisir :
+- Un **nom** (obligatoire)
+- Un **emoji** parmi une grille thématique (alimentation, boissons, hygiène…)
+- Une **catégorie** parmi celles du catalogue
+- Une **unité** (prédéfinie ou libre)
+
+Les produits personnalisés sont **persistés dans le navigateur** (localStorage), apparaissent en tête de catalogue et sont **supprimables** via l'icône poubelle. À la création, le produit est automatiquement ajouté à la liste de courses en cours.
+
+---
+
 ## Compatibilité mobile
 
 ### Safe areas (Android & iOS)

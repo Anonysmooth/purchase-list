@@ -14,6 +14,7 @@ export interface Product {
   category: Category;
   unit: string; // kg, L, pièces, etc.
   emoji: string;
+  isCustom?: boolean;
 }
 
 export interface ShoppingItem {

@@ -1,22 +1,30 @@
 import { useState, useMemo } from 'react';
 import type { Product, Category } from '../types';
 import { PRODUCTS, CATEGORY_LABELS, CATEGORY_EMOJIS, CATEGORY_COLORS } from '../data/products';
+import { CreateProductModal } from './CreateProductModal';
 
 interface CatalogProps {
   onAdd: (product: Product, qty: number) => void;
   getStock: (productId: string) => number;
   itemsInList: string[]; // product ids already in list
+  customProducts: Product[];
+  onDeleteCustomProduct: (productId: string) => void;
+  onCreateCustomProduct: (product: Omit<Product, 'id' | 'isCustom'>) => void;
 }
 
 const ALL_CATEGORIES = Object.keys(CATEGORY_LABELS) as Category[];
 
-export function Catalog({ onAdd, getStock, itemsInList }: CatalogProps) {
+export function Catalog({ onAdd, getStock, itemsInList, customProducts, onDeleteCustomProduct, onCreateCustomProduct }: CatalogProps) {
   const [search, setSearch] = useState('');
   const [activeCategory, setActiveCategory] = useState<Category | 'all'>('all');
   const [addedFeedback, setAddedFeedback] = useState<Record<string, boolean>>({});
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [createInitialName, setCreateInitialName] = useState('');
+
+  const allProducts = useMemo(() => [...customProducts, ...PRODUCTS], [customProducts]);
 
   const filteredProducts = useMemo(() => {
-    let list = PRODUCTS;
+    let list = allProducts;
     if (activeCategory !== 'all') {
       list = list.filter((p) => p.category === activeCategory);
     }
@@ -25,7 +33,7 @@ export function Catalog({ onAdd, getStock, itemsInList }: CatalogProps) {
       list = list.filter((p) => p.name.toLowerCase().includes(q));
     }
     return list;
-  }, [search, activeCategory]);
+  }, [search, activeCategory, allProducts]);
 
   const handleAdd = (product: Product) => {
     onAdd(product, 1);
@@ -46,26 +54,40 @@ export function Catalog({ onAdd, getStock, itemsInList }: CatalogProps) {
     return groups;
   }, [filteredProducts, activeCategory]);
 
+  const openCreate = (name = '') => {
+    setCreateInitialName(name);
+    setShowCreateModal(true);
+  };
+
   return (
     <div className="pb-2">
-      {/* Search bar */}
-      <div className="relative mb-4">
-        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg">🔍</span>
-        <input
-          type="search"
-          placeholder="Rechercher un produit..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent shadow-sm"
-        />
-        {search && (
-          <button
-            onClick={() => setSearch('')}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-          >
-            ✕
-          </button>
-        )}
+      {/* Search bar + create button */}
+      <div className="flex gap-2 mb-4">
+        <div className="relative flex-1">
+          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg">🔍</span>
+          <input
+            type="search"
+            placeholder="Rechercher un produit..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent shadow-sm"
+          />
+          {search && (
+            <button
+              onClick={() => setSearch('')}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            >
+              ✕
+            </button>
+          )}
+        </div>
+        <button
+          onClick={() => openCreate('')}
+          className="flex-shrink-0 w-12 bg-white border-2 border-green-400 text-green-600 rounded-xl flex items-center justify-center text-2xl font-light hover:bg-green-50 transition-colors shadow-sm"
+          title="Nouveau produit"
+        >
+          +
+        </button>
       </div>
 
       {/* Category filters */}
@@ -100,7 +122,19 @@ export function Catalog({ onAdd, getStock, itemsInList }: CatalogProps) {
         <div className="text-center py-12">
           <span className="text-4xl block mb-3">😕</span>
           <p className="text-gray-500 text-sm">Aucun produit trouvé</p>
-          {search && (
+          {search ? (
+            <div className="mt-4">
+              <p className="text-gray-400 text-xs mb-3">
+                "{search}" n'est pas dans le catalogue
+              </p>
+              <button
+                onClick={() => openCreate(search)}
+                className="bg-green-500 text-white px-5 py-2.5 rounded-xl font-semibold text-sm shadow-md hover:bg-green-600 transition-colors"
+              >
+                + Créer "{search}"
+              </button>
+            </div>
+          ) : (
             <p className="text-gray-400 text-xs mt-1">Essayez un autre terme</p>
           )}
         </div>
@@ -121,6 +155,7 @@ export function Catalog({ onAdd, getStock, itemsInList }: CatalogProps) {
                     inList={itemsInList.includes(product.id)}
                     added={addedFeedback[product.id] ?? false}
                     onAdd={() => handleAdd(product)}
+                    onDelete={product.isCustom ? () => onDeleteCustomProduct(product.id) : undefined}
                   />
                 ))}
               </div>
@@ -138,9 +173,22 @@ export function Catalog({ onAdd, getStock, itemsInList }: CatalogProps) {
               inList={itemsInList.includes(product.id)}
               added={addedFeedback[product.id] ?? false}
               onAdd={() => handleAdd(product)}
+              onDelete={product.isCustom ? () => onDeleteCustomProduct(product.id) : undefined}
             />
           ))}
         </div>
+      )}
+
+      {/* Create modal */}
+      {showCreateModal && (
+        <CreateProductModal
+          initialName={createInitialName}
+          onClose={() => setShowCreateModal(false)}
+          onCreate={(data) => {
+            onCreateCustomProduct(data);
+            setShowCreateModal(false);
+          }}
+        />
       )}
     </div>
   );
@@ -152,12 +200,14 @@ function ProductCard({
   inList,
   added,
   onAdd,
+  onDelete,
 }: {
   product: Product;
   stockQty: number;
   inList: boolean;
   added: boolean;
   onAdd: () => void;
+  onDelete?: () => void;
 }) {
   return (
     <div className="flex items-center gap-3 p-3 bg-white rounded-xl shadow-sm border border-gray-100">
@@ -175,6 +225,20 @@ function ProductCard({
           ) : null}
         </div>
       </div>
+      {onDelete && (
+        <button
+          onClick={(e) => { e.stopPropagation(); onDelete(); }}
+          className="flex-shrink-0 w-7 h-7 flex items-center justify-center text-gray-300 hover:text-red-400 transition-colors"
+          title="Supprimer ce produit"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+            <polyline points="3 6 5 6 21 6" />
+            <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" />
+            <path d="M10 11v6M14 11v6" />
+            <path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2" />
+          </svg>
+        </button>
+      )}
       <button
         onClick={onAdd}
         className={`flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center font-bold text-lg transition-all ${

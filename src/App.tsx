@@ -2,6 +2,7 @@ import { useState } from 'react';
 import './index.css';
 import type { Tab } from './types';
 import { useShoppingList } from './hooks/useShoppingList';
+import { useCustomProducts } from './hooks/useCustomProducts';
 import { BottomNav } from './components/BottomNav';
 import { ShoppingList } from './components/ShoppingList';
 import { Catalog } from './components/Catalog';
@@ -33,6 +34,8 @@ function App() {
     getStock,
     updateStock,
   } = useShoppingList();
+
+  const { customProducts, addCustomProduct, deleteCustomProduct } = useCustomProducts();
 
   const itemsInList = items.map((i) => i.product.id);
 
@@ -74,6 +77,12 @@ function App() {
             onAdd={addItem}
             getStock={getStock}
             itemsInList={itemsInList}
+            customProducts={customProducts}
+            onDeleteCustomProduct={deleteCustomProduct}
+            onCreateCustomProduct={(data) => {
+              const newProduct = addCustomProduct(data);
+              addItem(newProduct, 1);
+            }}
           />
         )}
         {activeTab === 'stock' && (
