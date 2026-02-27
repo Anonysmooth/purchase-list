@@ -14,7 +14,7 @@ export function BottomNav({ activeTab, onTabChange, listCount }: BottomNavProps)
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 pb-safe z-50">
+    <nav className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 pb-safe z-50">
       <div className="flex max-w-lg mx-auto">
         {tabs.map((tab) => (
           <button
@@ -22,8 +22,8 @@ export function BottomNav({ activeTab, onTabChange, listCount }: BottomNavProps)
             onClick={() => onTabChange(tab.id)}
             className={`flex-1 flex flex-col items-center py-2 px-1 transition-colors ${
               activeTab === tab.id
-                ? 'text-green-600'
-                : 'text-gray-400 hover:text-gray-600'
+                ? 'text-green-600 dark:text-green-400'
+                : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
             }`}
           >
             <span className="text-xl relative">
@@ -34,7 +34,7 @@ export function BottomNav({ activeTab, onTabChange, listCount }: BottomNavProps)
                 </span>
               )}
             </span>
-            <span className={`text-xs mt-0.5 font-medium ${activeTab === tab.id ? 'text-green-600' : 'text-gray-400'}`}>
+            <span className={`text-xs mt-0.5 font-medium ${activeTab === tab.id ? 'text-green-600 dark:text-green-400' : 'text-gray-400'}`}>
               {tab.label}
             </span>
           </button>

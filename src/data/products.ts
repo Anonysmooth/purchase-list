@@ -110,12 +110,12 @@ export const CATEGORY_EMOJIS: Record<string, string> = {
 };
 
 export const CATEGORY_COLORS: Record<string, string> = {
-  alimentation: 'bg-orange-100 text-orange-800 border-orange-200',
-  boissons: 'bg-blue-100 text-blue-800 border-blue-200',
-  vaisselle: 'bg-cyan-100 text-cyan-800 border-cyan-200',
-  linge: 'bg-purple-100 text-purple-800 border-purple-200',
-  hygiene: 'bg-pink-100 text-pink-800 border-pink-200',
-  menage: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-  bebe: 'bg-rose-100 text-rose-800 border-rose-200',
-  autre: 'bg-gray-100 text-gray-800 border-gray-200',
+  alimentation: 'bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-900/30 dark:text-orange-300 dark:border-orange-800',
+  boissons: 'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800',
+  vaisselle: 'bg-cyan-100 text-cyan-800 border-cyan-200 dark:bg-cyan-900/30 dark:text-cyan-300 dark:border-cyan-800',
+  linge: 'bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-900/30 dark:text-purple-300 dark:border-purple-800',
+  hygiene: 'bg-pink-100 text-pink-800 border-pink-200 dark:bg-pink-900/30 dark:text-pink-300 dark:border-pink-800',
+  menage: 'bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-300 dark:border-yellow-800',
+  bebe: 'bg-rose-100 text-rose-800 border-rose-200 dark:bg-rose-900/30 dark:text-rose-300 dark:border-rose-800',
+  autre: 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600',
 };

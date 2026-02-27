@@ -8,6 +8,12 @@ Toutes les modifications notables sont documentées dans ce fichier.
 
 ### Ajouts
 
+- **Mode sombre automatique** — L'application suit désormais le thème du système d'exploitation (Android/iOS). Aucun bouton requis : si le téléphone est en mode sombre, l'app bascule automatiquement (`darkMode: 'media'` dans `tailwind.config.js`).
+  - Fond général : `gray-900`, surfaces cartes : `gray-800`
+  - Header, BottomNav, modals, inputs et selects adaptés
+  - Badges de catégories (`CATEGORY_COLORS` dans `src/data/products.ts`) mis à jour avec des variantes dark pour chaque couleur
+  - Tous les composants couverts : `App`, `BottomNav`, `ShoppingList`, `Catalog`, `StockManager`, `CreateProductModal`
+
 - **Produits personnalisés** — Il est maintenant possible de créer ses propres produits depuis le catalogue via un bouton `+` dans la barre de recherche (`src/components/Catalog.tsx`, `src/components/CreateProductModal.tsx`, `src/hooks/useCustomProducts.ts`)
   - Formulaire de création avec nom, emoji (grille de sélection thématique), catégorie et unité
   - Si une recherche ne donne aucun résultat, un bouton « Créer "{terme}" » pré-remplit le formulaire avec le nom recherché

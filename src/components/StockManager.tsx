@@ -57,11 +57,11 @@ export function StockManager({ stock, onUpdateStock }: StockManagerProps) {
   return (
     <div className="pb-2">
       {/* Header info */}
-      <div className="bg-blue-50 rounded-xl p-4 mb-4 flex items-start gap-3">
+      <div className="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-4 mb-4 flex items-start gap-3">
         <span className="text-2xl flex-shrink-0">🏠</span>
         <div>
-          <p className="text-sm font-semibold text-blue-800">Gestion du stock</p>
-          <p className="text-xs text-blue-600 mt-0.5">
+          <p className="text-sm font-semibold text-blue-800 dark:text-blue-300">Gestion du stock</p>
+          <p className="text-xs text-blue-600 dark:text-blue-400 mt-0.5">
             Indiquez les quantités que vous avez déjà à la maison. Ces informations apparaîtront dans votre liste de courses.
           </p>
         </div>
@@ -75,12 +75,12 @@ export function StockManager({ stock, onUpdateStock }: StockManagerProps) {
           placeholder="Rechercher un produit..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent shadow-sm"
+          className="w-full pl-10 pr-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent shadow-sm"
         />
         {search && (
           <button
             onClick={() => setSearch('')}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
           >
             ✕
           </button>
@@ -96,7 +96,7 @@ export function StockManager({ stock, onUpdateStock }: StockManagerProps) {
             className={`flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors whitespace-nowrap ${
               activeCategory === cat
                 ? 'bg-blue-500 text-white border-blue-500'
-                : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'
+                : 'bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
             }`}
           >
             {cat !== 'all' && cat !== 'instock' && CATEGORY_EMOJIS[cat] + ' '}
@@ -112,13 +112,13 @@ export function StockManager({ stock, onUpdateStock }: StockManagerProps) {
           <span className="text-4xl block mb-3">
             {activeCategory === 'instock' ? '📭' : '😕'}
           </span>
-          <p className="text-gray-500 text-sm">
+          <p className="text-gray-500 dark:text-gray-400 text-sm">
             {activeCategory === 'instock' && stockedCount === 0
               ? 'Aucun produit en stock'
               : 'Aucun produit trouvé'}
           </p>
           {activeCategory === 'instock' && stockedCount === 0 && (
-            <p className="text-gray-400 text-xs mt-1">
+            <p className="text-gray-400 dark:text-gray-500 text-xs mt-1">
               Parcourez tous les produits pour indiquer votre stock
             </p>
           )}
@@ -130,18 +130,20 @@ export function StockManager({ stock, onUpdateStock }: StockManagerProps) {
             return (
               <div
                 key={product.id}
-                className={`flex items-center gap-3 p-3 bg-white rounded-xl shadow-sm border transition-all ${
-                  qty > 0 ? 'border-blue-200 bg-blue-50/50' : 'border-gray-100'
+                className={`flex items-center gap-3 p-3 rounded-xl shadow-sm border transition-all ${
+                  qty > 0
+                    ? 'border-blue-200 dark:border-blue-800 bg-blue-50/50 dark:bg-blue-900/20'
+                    : 'bg-white dark:bg-gray-800 border-gray-100 dark:border-gray-700'
                 }`}
               >
                 <span className="text-2xl flex-shrink-0">{product.emoji}</span>
                 <div className="flex-1 min-w-0">
-                  <p className="font-medium text-sm text-gray-900 truncate">{product.name}</p>
+                  <p className="font-medium text-sm text-gray-900 dark:text-white truncate">{product.name}</p>
                   <div className="flex items-center gap-2 mt-0.5">
                     <span className={`text-xs px-1.5 py-0.5 rounded-full border font-medium ${CATEGORY_COLORS[product.category]}`}>
                       {CATEGORY_LABELS[product.category]}
                     </span>
-                    <span className="text-xs text-gray-400">{product.unit}</span>
+                    <span className="text-xs text-gray-400 dark:text-gray-500">{product.unit}</span>
                   </div>
                 </div>
 
@@ -150,11 +152,11 @@ export function StockManager({ stock, onUpdateStock }: StockManagerProps) {
                   <button
                     onClick={() => onUpdateStock(product.id, qty - 1)}
                     disabled={qty === 0}
-                    className="w-8 h-8 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center text-lg font-bold hover:bg-gray-200 active:bg-gray-300 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                    className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 flex items-center justify-center text-lg font-bold hover:bg-gray-200 dark:hover:bg-gray-600 active:bg-gray-300 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                   >
                     −
                   </button>
-                  <span className={`w-10 text-center text-sm font-bold ${qty > 0 ? 'text-blue-600' : 'text-gray-300'}`}>
+                  <span className={`w-10 text-center text-sm font-bold ${qty > 0 ? 'text-blue-600 dark:text-blue-400' : 'text-gray-300 dark:text-gray-600'}`}>
                     {qty}
                   </span>
                   <button

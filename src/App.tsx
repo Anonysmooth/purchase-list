@@ -42,16 +42,16 @@ function App() {
   const handleGoToCatalog = () => setActiveTab('catalog');
 
   return (
-    <div className="min-h-dvh bg-gray-50 flex flex-col">
+    <div className="min-h-dvh bg-gray-50 dark:bg-gray-900 flex flex-col">
       {/* Header */}
-      <header className="bg-white border-b border-gray-100 shadow-sm sticky top-0 z-40 pt-safe">
+      <header className="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700 shadow-sm sticky top-0 z-40 pt-safe">
         <div className="max-w-lg mx-auto px-4 py-3 flex items-center gap-3">
           <span className="text-2xl">{TAB_ICONS[activeTab]}</span>
-          <h1 className="text-lg font-bold text-gray-900 tracking-tight">
+          <h1 className="text-lg font-bold text-gray-900 dark:text-white tracking-tight">
             {TAB_TITLES[activeTab]}
           </h1>
           {activeTab === 'list' && items.length > 0 && (
-            <span className="ml-auto text-xs bg-green-100 text-green-700 font-semibold px-2.5 py-1 rounded-full">
+            <span className="ml-auto text-xs bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 font-semibold px-2.5 py-1 rounded-full">
               {items.filter((i) => !i.checked).length}/{items.length}
             </span>
           )}

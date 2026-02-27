@@ -155,6 +155,14 @@ android/app/build/outputs/apk/release/app-release.apk
 
 ## Fonctionnalités
 
+### Mode sombre
+
+L'application suit automatiquement le thème du système d'exploitation (Android & iOS). Aucune action requise de la part de l'utilisateur : l'interface bascule en mode sombre dès que le téléphone est configuré en thème sombre.
+
+Implémenté via `darkMode: 'media'` dans Tailwind CSS, qui s'appuie sur la media query `@media (prefers-color-scheme: dark)`.
+
+---
+
 ### Catalogue de produits
 
 Le catalogue regroupe tous les produits disponibles, filtrables par catégorie ou par recherche textuelle.

@@ -70,12 +70,12 @@ export function Catalog({ onAdd, getStock, itemsInList, customProducts, onDelete
             placeholder="Rechercher un produit..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent shadow-sm"
+            className="w-full pl-10 pr-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent shadow-sm"
           />
           {search && (
             <button
               onClick={() => setSearch('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
             >
               ✕
             </button>
@@ -83,7 +83,7 @@ export function Catalog({ onAdd, getStock, itemsInList, customProducts, onDelete
         </div>
         <button
           onClick={() => openCreate('')}
-          className="flex-shrink-0 w-12 bg-white border-2 border-green-400 text-green-600 rounded-xl flex items-center justify-center text-2xl font-light hover:bg-green-50 transition-colors shadow-sm"
+          className="flex-shrink-0 w-12 bg-white dark:bg-gray-800 border-2 border-green-400 text-green-600 dark:text-green-400 rounded-xl flex items-center justify-center text-2xl font-light hover:bg-green-50 dark:hover:bg-green-900/20 transition-colors shadow-sm"
           title="Nouveau produit"
         >
           +
@@ -97,7 +97,7 @@ export function Catalog({ onAdd, getStock, itemsInList, customProducts, onDelete
           className={`flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors ${
             activeCategory === 'all'
               ? 'bg-green-500 text-white border-green-500'
-              : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'
+              : 'bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
           }`}
         >
           Tous
@@ -109,7 +109,7 @@ export function Catalog({ onAdd, getStock, itemsInList, customProducts, onDelete
             className={`flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors ${
               activeCategory === cat
                 ? 'bg-green-500 text-white border-green-500'
-                : `bg-white border-gray-200 hover:bg-gray-50 ${activeCategory === 'all' ? 'text-gray-500' : 'text-gray-500'}`
+                : 'bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
             }`}
           >
             {CATEGORY_EMOJIS[cat]} {CATEGORY_LABELS[cat]}
@@ -121,10 +121,10 @@ export function Catalog({ onAdd, getStock, itemsInList, customProducts, onDelete
       {filteredProducts.length === 0 ? (
         <div className="text-center py-12">
           <span className="text-4xl block mb-3">😕</span>
-          <p className="text-gray-500 text-sm">Aucun produit trouvé</p>
+          <p className="text-gray-500 dark:text-gray-400 text-sm">Aucun produit trouvé</p>
           {search ? (
             <div className="mt-4">
-              <p className="text-gray-400 text-xs mb-3">
+              <p className="text-gray-400 dark:text-gray-500 text-xs mb-3">
                 "{search}" n'est pas dans le catalogue
               </p>
               <button
@@ -135,7 +135,7 @@ export function Catalog({ onAdd, getStock, itemsInList, customProducts, onDelete
               </button>
             </div>
           ) : (
-            <p className="text-gray-400 text-xs mt-1">Essayez un autre terme</p>
+            <p className="text-gray-400 dark:text-gray-500 text-xs mt-1">Essayez un autre terme</p>
           )}
         </div>
       ) : activeCategory === 'all' && !search ? (
@@ -143,7 +143,7 @@ export function Catalog({ onAdd, getStock, itemsInList, customProducts, onDelete
         <div className="space-y-5">
           {Object.entries(grouped || {}).map(([cat, products]) => (
             <div key={cat}>
-              <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2 flex items-center gap-1.5">
+              <h3 className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2 flex items-center gap-1.5">
                 {CATEGORY_EMOJIS[cat]} {CATEGORY_LABELS[cat]}
               </h3>
               <div className="space-y-2">
@@ -210,16 +210,16 @@ function ProductCard({
   onDelete?: () => void;
 }) {
   return (
-    <div className="flex items-center gap-3 p-3 bg-white rounded-xl shadow-sm border border-gray-100">
+    <div className="flex items-center gap-3 p-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
       <span className="text-2xl flex-shrink-0">{product.emoji}</span>
       <div className="flex-1 min-w-0">
-        <p className="font-medium text-sm text-gray-900 truncate">{product.name}</p>
+        <p className="font-medium text-sm text-gray-900 dark:text-white truncate">{product.name}</p>
         <div className="flex items-center gap-2 mt-0.5">
           <span className={`text-xs px-1.5 py-0.5 rounded-full border font-medium ${CATEGORY_COLORS[product.category]}`}>
             {CATEGORY_LABELS[product.category]}
           </span>
           {stockQty > 0 ? (
-            <span className="text-xs text-blue-600 font-medium">
+            <span className="text-xs text-blue-600 dark:text-blue-400 font-medium">
               🏠 {stockQty} {product.unit} en stock
             </span>
           ) : null}
@@ -228,7 +228,7 @@ function ProductCard({
       {onDelete && (
         <button
           onClick={(e) => { e.stopPropagation(); onDelete(); }}
-          className="flex-shrink-0 w-7 h-7 flex items-center justify-center text-gray-300 hover:text-red-400 transition-colors"
+          className="flex-shrink-0 w-7 h-7 flex items-center justify-center text-gray-300 dark:text-gray-600 hover:text-red-400 transition-colors"
           title="Supprimer ce produit"
         >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
@@ -245,7 +245,7 @@ function ProductCard({
           added
             ? 'bg-green-500 text-white scale-90'
             : inList
-            ? 'bg-green-100 text-green-600 hover:bg-green-200'
+            ? 'bg-green-100 dark:bg-green-900/40 text-green-600 dark:text-green-400 hover:bg-green-200 dark:hover:bg-green-900/60'
             : 'bg-green-500 text-white hover:bg-green-600 active:bg-green-700 shadow-md'
         }`}
       >
