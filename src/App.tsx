@@ -39,9 +39,9 @@ function App() {
   const handleGoToCatalog = () => setActiveTab('catalog');
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-dvh bg-gray-50 flex flex-col">
       {/* Header */}
-      <header className="bg-white border-b border-gray-100 shadow-sm sticky top-0 z-40">
+      <header className="bg-white border-b border-gray-100 shadow-sm sticky top-0 z-40 pt-safe">
         <div className="max-w-lg mx-auto px-4 py-3 flex items-center gap-3">
           <span className="text-2xl">{TAB_ICONS[activeTab]}</span>
           <h1 className="text-lg font-bold text-gray-900 tracking-tight">

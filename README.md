@@ -153,6 +153,27 @@ android/app/build/outputs/apk/release/app-release.apk
 
 ---
 
+## Compatibilité mobile
+
+### Safe areas (Android & iOS)
+
+L'application gère les zones système (barre de statut, barre de navigation) via les CSS environment variables :
+
+- `env(safe-area-inset-top)` — espace sous la barre de statut Android/iOS
+- `env(safe-area-inset-bottom)` — espace au-dessus de la barre de navigation Android / home indicator iOS
+
+Ces variables ne sont actives que si `viewport-fit=cover` est présent dans le meta viewport (`index.html`).
+
+Classes utilitaires définies dans `src/index.css` :
+- `.pt-safe` — appliqué sur le header
+- `.pb-safe` — appliqué sur le BottomNav
+
+### Hauteur dynamique
+
+L'app utilise `min-h-dvh` (dynamic viewport height) plutôt que `min-h-screen` (`100vh`) afin d'exclure les barres système Android du calcul de hauteur, évitant tout débordement sur les grands écrans (ex : Samsung S24).
+
+---
+
 ## Infos de l'app
 
 | Champ | Valeur |
